@@ -395,6 +395,14 @@ class Builder {
 			// include deleted model in a relationship result set that is lazy loaded.
 			if ($this->isSoftDeleteConstraint($where, $column))
 			{
+				if(isset($where['value'] )){
+					$bindings = $this->query->getBindings();
+					unset($bindings[$key]);
+
+					$this->query->setBindings(array_values($bindings));
+
+				}
+				
 				unset($this->query->wheres[$key]);
 
 				$this->query->wheres = array_values($this->query->wheres);
@@ -427,7 +435,7 @@ class Builder {
 	 */
 	protected function isSoftDeleteConstraint(array $where, $column)
 	{
-		return $where['type'] == 'Null' && $where['column'] == $column;
+		return $where['column'] == $column;
 	}
 
 	/**
